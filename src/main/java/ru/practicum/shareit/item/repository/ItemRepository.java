@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.repository;
 
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.error.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;

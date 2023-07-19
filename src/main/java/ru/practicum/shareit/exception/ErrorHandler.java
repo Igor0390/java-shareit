@@ -1,5 +1,6 @@
 package ru.practicum.shareit.exception;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,7 +11,8 @@ import javax.validation.ValidationException;
 
 @RestControllerAdvice
 @Slf4j
-public class HandleException {
+public class ErrorHandler {
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFound(final NotFoundException e) {
@@ -32,3 +34,5 @@ public class HandleException {
         return new ErrorResponse("Неизвестная ошибка");
     }
 }
+
+

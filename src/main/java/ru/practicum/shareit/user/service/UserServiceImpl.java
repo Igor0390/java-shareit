@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.ErrorValidation;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -39,7 +40,9 @@ public class UserServiceImpl implements UserService {
             userToUpdate.setName(user.getName());
         }
         if (user.getEmail() != null) {
-            checkEmail(user);
+            if (!userRepository.getUserById(id).getEmail().equals(user.getEmail())) {
+                checkEmail(user);
+            }
             userToUpdate.setEmail(user.getEmail());
         }
         log.info("Данные пользователя обновлены.");
@@ -59,14 +62,14 @@ public class UserServiceImpl implements UserService {
     private void checkEmail(User user) {
         for (User u : userRepository.getAllUsers()) {
             if (user.getEmail().equals(u.getEmail())) {
-                throw new RuntimeException("Пользователь с таким адресом электронной почты уже существует.");
+                throw new ErrorValidation("Пользователь с таким адресом электронной почты уже существует.");
             }
         }
     }
 
     private void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@") ||
-        user.getName().isBlank()) {
+                user.getName().isBlank()) {
             throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @.");
         }
     }

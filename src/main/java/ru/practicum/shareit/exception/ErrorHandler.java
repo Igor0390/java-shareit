@@ -26,6 +26,7 @@ public class ErrorHandler {
         log.error("Validation Exception");
         return new ErrorResponse(e.getMessage());
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleValidate(final ErrorValidation e) {

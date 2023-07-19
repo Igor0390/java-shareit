@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.exception.NotFoundException;
 
 import javax.validation.ValidationException;
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class ItemServiceImpl implements ItemService {
 
     private void validateItem(Item item) {
         if (item.getAvailable() == null || item.getName().isBlank() || item.getDescription() == null ||
-        item.getDescription().isBlank() || item.getName() == null) {
+                item.getDescription().isBlank() || item.getName() == null) {
             throw new ValidationException("Неверные данные.");
         }
     }

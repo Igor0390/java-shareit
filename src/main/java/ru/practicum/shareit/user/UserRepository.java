@@ -1,2 +1,4 @@
-package ru.practicum.shareit.user;public class UserRepository {
+package ru.practicum.shareit.user;
+
+public class UserRepository {
 }

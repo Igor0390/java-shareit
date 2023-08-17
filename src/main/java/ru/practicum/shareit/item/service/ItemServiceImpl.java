@@ -116,6 +116,7 @@ public class ItemServiceImpl implements ItemService {
         return toItemsDto(items);
     }
 
+
     private Item getItem(Long itemId) {
         return itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundException("Неверный ID."));
@@ -176,7 +177,6 @@ public class ItemServiceImpl implements ItemService {
 
                 Optional<Booking> nextBooking = bookings.getOrDefault(item.getId(), Collections.emptyList()).stream().
                         filter(b -> b.getStart().isAfter(now)).findFirst();
-
                 Optional<Booking> lastBooking = bookings.getOrDefault(item.getId(), Collections.emptyList()).stream().
                         filter(b -> !b.getStart().isAfter(now)).reduce((first, second) -> second);
 

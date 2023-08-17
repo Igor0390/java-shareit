@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
@@ -139,13 +140,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private BookingShortDto getNextBooking(Long itemId) {
-        return bookingRepository.findFirstByItemIdAndStartAfterAndStatusOrderByStartAsc(itemId, LocalDateTime.now(), APPROVED)
+        return bookingRepository.findFirstByItemIdAndStartAfterAndStatusOrderByStartAsc(itemId, LocalDateTime.now(),
+                        APPROVED)
                 .map(BookingMapper::toBookingShortDto)
                 .orElse(null);
     }
 
     private BookingShortDto getLastBooking(Long itemId) {
-        return bookingRepository.findFirstByItemIdAndStartBeforeOrderByStartDesc(itemId, LocalDateTime.now())
+        return bookingRepository.findFirstByItemIdAndStartLessThanEqualOrderByStartDesc(itemId, LocalDateTime.now())
                 .map(BookingMapper::toBookingShortDto)
                 .orElse(null);
     }
@@ -164,21 +166,19 @@ public class ItemServiceImpl implements ItemService {
 
     private List<ItemDto> setBookings(List<Item> items) {
         List<ItemDto> itemsDto = toItemsDto(items);
-
-        Set<Booking> bookings = new HashSet<>(bookingRepository.findAll());
+        Map<Long, List<Booking>> bookings = bookingRepository.findBookingsByItemInAndStatus(items, APPROVED,
+                        Sort.by(Sort.Direction.ASC, "start")).stream()
+                .collect(Collectors.groupingBy(b -> b.getItem().getId(), Collectors.toList()));
 
         if (!itemsDto.isEmpty()) {
+            LocalDateTime now = LocalDateTime.now();
             itemsDto.forEach(item -> {
 
-                Optional<Booking> nextBooking = bookings.stream()
-                        .filter(booking -> booking.getItem().getId().equals(item.getId()))
-                        .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
-                        .min(Comparator.comparing(Booking::getStart));
+                Optional<Booking> nextBooking = bookings.getOrDefault(item.getId(), Collections.emptyList()).stream().
+                        filter(b -> b.getStart().isAfter(now)).findFirst();
 
-                Optional<Booking> lastBooking = bookings.stream()
-                        .filter(booking -> booking.getItem().getId().equals(item.getId()))
-                        .filter(booking -> booking.getEnd().isBefore(LocalDateTime.now()))
-                        .max(Comparator.comparing(Booking::getEnd));
+                Optional<Booking> lastBooking = bookings.getOrDefault(item.getId(), Collections.emptyList()).stream().
+                        filter(b -> !b.getStart().isAfter(now)).reduce((first, second) -> second);
 
                 item.setNextBooking(nextBooking
                         .map(BookingMapper::toBookingShortDto)

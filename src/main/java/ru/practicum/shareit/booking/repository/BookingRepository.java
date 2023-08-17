@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-
     //ALL
     List<Booking> findAllByBookerIdOrderByIdDesc(Long userId, Sort sort);
 
@@ -51,10 +50,12 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Optional<Booking> findFirstByItemIdAndStartAfterAndStatusOrderByStartAsc(Long itemId, LocalDateTime now, Status approved);
 
-    Optional<Booking> findFirstByItemIdAndStartBeforeOrderByStartDesc(Long itemId, LocalDateTime now);
+    Optional<Booking> findFirstByItemIdAndStartLessThanEqualOrderByStartDesc(Long itemId, LocalDateTime now);
 
     List<Booking> findAllByBookerIdAndItemIdAndStatusEqualsAndEndIsBefore(Long userId, Long itemId, Status approved,
                                                                           LocalDateTime now);
 
     List<Booking> findBookingsByItem(Item item);
+
+    List<Booking> findBookingsByItemInAndStatus(List<Item> items, Status status, Sort sort);
 }

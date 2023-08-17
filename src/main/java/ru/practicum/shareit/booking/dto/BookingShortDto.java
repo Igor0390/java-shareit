@@ -5,6 +5,7 @@ import ru.practicum.shareit.booking.model.Status;
 
 import java.time.LocalDateTime;
 
+@Data
 @Getter
 @Setter
 @Builder
@@ -12,7 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BookingShortDto {
     private Long id;
+
     private LocalDateTime start;
+
     private LocalDateTime end;
     private Long bookerId;
 

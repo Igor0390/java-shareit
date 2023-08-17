@@ -15,7 +15,6 @@ public class BookingDto {
     private Item item;
     private User booker;
     private Status status;
-
     @Data
     public static class Item {
         private final Long id;

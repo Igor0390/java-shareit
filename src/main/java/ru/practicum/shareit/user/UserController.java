@@ -1,10 +1,12 @@
 package ru.practicum.shareit.user;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.dto.Create;
+import ru.practicum.shareit.user.dto.Update;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto saveUser(@Valid @RequestBody UserDto userDto) {
+    public UserDto saveUser(@Validated({Update.class, Create.class}) @RequestBody UserDto userDto) {
         return userService.saveUser(userDto);
     }
 

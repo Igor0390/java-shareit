@@ -19,7 +19,6 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,22 +44,20 @@ public class ItemServiceImpl implements ItemService {
 
         Item item = toItem(itemDto);
         item.setOwner(userOwner);
-        validateItem(item);
         log.info("Вещь добавлена.");
         return toItemDto(itemRepository.save(item));
     }
 
     @Override
     public ItemDto updateItem(Long itemId, ItemDto itemDto, Long userId) {
-
         Item item = getItem(itemId);
         if (!userId.equals(item.getOwner().getId())) {
             throw new NotFoundException("Неверный ID пользователя.");
         }
-        if (itemDto.getName() != null) {
+        if (itemDto.getName() != null && !itemDto.getName().isBlank()) {
             item.setName(itemDto.getName());
         }
-        if (itemDto.getDescription() != null) {
+        if (itemDto.getDescription() != null && !itemDto.getDescription().isBlank()) {
             item.setDescription(itemDto.getDescription());
         }
         if (itemDto.getAvailable() != null) {
@@ -98,12 +95,12 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getItemByText(String text) {
 
         if (text.isBlank()) {
-            return new ArrayList<>();
+            return List.of();
         }
         String query = text.toLowerCase();
         List<Item> items = itemRepository.getItemByText(query);
         if (items.isEmpty()) {
-            return new ArrayList<>();
+            return List.of();
         }
         return toItemsDto(items);
     }
@@ -111,12 +108,6 @@ public class ItemServiceImpl implements ItemService {
 
     private Item getItem(Long itemId) {
         return itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Неверный ID."));
-    }
-
-    private void validateItem(Item item) {
-        if (item.getAvailable() == null || item.getName().isBlank() || item.getDescription() == null || item.getDescription().isBlank() || item.getName() == null) {
-            throw new ValidationException("Неверные данные.");
-        }
     }
 
     private void populateItemDto(ItemDto itemDto) {

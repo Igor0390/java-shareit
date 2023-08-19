@@ -54,6 +54,9 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto updateItem(Long itemId, ItemDto itemDto, Long userId) {
 
         Item item = getItem(itemId);
+        if (!userId.equals(item.getOwner().getId())) {
+            throw new NotFoundException("Неверный ID пользователя.");
+        }
         if (itemDto.getName() != null) {
             item.setName(itemDto.getName());
         }

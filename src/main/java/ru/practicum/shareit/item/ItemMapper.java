@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @UtilityClass
-
 public class ItemMapper {
     public static ItemDto toItemDto(Item item) {
         return ItemDto.builder()

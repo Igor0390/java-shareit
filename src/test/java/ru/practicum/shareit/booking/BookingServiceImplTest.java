@@ -12,7 +12,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.exception.BookingValidationException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
@@ -216,7 +216,7 @@ public class BookingServiceImplTest {
     void testGetAllByBookerFailByWrongState() {
         bookingService.saveBooking(bookingRequestDto, 2L);
 
-        BadRequestException e = assertThrows(BadRequestException.class,
+        BookingValidationException e = assertThrows(BookingValidationException.class,
                 () -> bookingService.getAllByBooker(2L, "FUTUR", 0, 2));
         assertThat(e.getMessage(), equalTo("Unknown state: FUTUR"));
     }
@@ -289,7 +289,7 @@ public class BookingServiceImplTest {
     void testGetAllByOwnerFailByWrongState() {
         bookingService.saveBooking(bookingRequestDto, 2L);
 
-        BadRequestException e = assertThrows(BadRequestException.class,
+        BookingValidationException e = assertThrows(BookingValidationException.class,
                 () -> bookingService.getAllByOwner(2L, "FUTUR", 0, 2));
         assertThat(e.getMessage(), equalTo("Unknown state: FUTUR"));
     }

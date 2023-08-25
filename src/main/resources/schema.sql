@@ -20,7 +20,7 @@ create TABLE IF NOT EXISTS items (
     description  VARCHAR(1000) NOT NULL,
     available    BOOLEAN,
     owner_id     BIGINT REFERENCES users (id) ON delete CASCADE NOT NULL ,
-    request_id  BIGINT REFERENCES requests (id) ON delete CASCADE NOT NULL,
+    request_id  BIGINT REFERENCES requests (id) ON delete CASCADE,
     CONSTRAINT pk_item PRIMARY KEY (id)
     );
 

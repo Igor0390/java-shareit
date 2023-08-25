@@ -33,6 +33,7 @@ public class ItemMapperTest {
                 .description("дрель аккамуляторная")
                 .available(true)
                 .owner(User.builder().build())
+                .request(itemRequest)
                 .build();
 
         itemDto = ItemMapper.toItemDto(item);
@@ -47,6 +48,7 @@ public class ItemMapperTest {
         Assertions.assertEquals(item.getName(), itemDto.getName());
         Assertions.assertEquals(item.getDescription(), itemDto.getDescription());
         Assertions.assertEquals(item.getAvailable(), itemDto.getAvailable());
+        Assertions.assertEquals(item.getRequest().getId(), itemDto.getRequestId());
     }
 
     @Test

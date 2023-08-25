@@ -26,7 +26,7 @@ import static ru.practicum.shareit.request.Service.ItemRequestMapper.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ItemRequestServiceImpl implements ItemRequestService{
+public class ItemRequestServiceImpl implements ItemRequestService {
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;

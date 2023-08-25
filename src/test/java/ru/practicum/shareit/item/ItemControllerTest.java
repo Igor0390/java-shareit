@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.exception.BadRequestExceptionHandler;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.service.CommentService;
@@ -248,7 +248,7 @@ public class ItemControllerTest {
     @Test
     void testSaveCommentWithStatus400() throws Exception {
         when(commentService.saveComment(anyLong(), anyLong(), any()))
-                .thenThrow(new BadRequestException("Validation error 400"));
+                .thenThrow(new BadRequestExceptionHandler("Validation error 400"));
 
         mvc.perform(post("/items/{id}/comment", 2)
                         .content(mapper.writeValueAsString(commentDto))

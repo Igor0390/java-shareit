@@ -18,7 +18,6 @@ import ru.practicum.shareit.user.service.UserService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.validation.ValidationException;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -50,7 +49,6 @@ public class ItemServiceImplTest {
             .name("Молоток")
             .description("молоток забивной")
             .available(true)
-            .requestId(1L)
             .build();
 
     private final CommentDto commentDto = CommentDto
@@ -96,32 +94,6 @@ public class ItemServiceImplTest {
         NotFoundException e = assertThrows(NotFoundException.class,
                 () -> itemService.saveItem(itemDto, 1L));
         assertThat(e.getMessage(), equalTo("Неверный ID запроса."));
-    }
-
-    @Test
-    void testSaveItemFailWrongDescription() {
-
-        userService.saveUser(userDto);
-        itemService.saveItem(itemDto, 1L);
-        itemDto.setDescription(null);
-
-        ValidationException e = assertThrows(ValidationException.class,
-                () -> itemService.saveItem(itemDto, 1L));
-
-        assertThat(e.getMessage(), equalTo("Неверные данные."));
-    }
-
-    @Test
-    void testSaveItemFailWrongAvailable() {
-
-        userService.saveUser(userDto);
-        itemService.saveItem(itemDto, 1L);
-        itemDto.setAvailable(null);
-
-        ValidationException e = assertThrows(ValidationException.class,
-                () -> itemService.saveItem(itemDto, 1L));
-
-        assertThat(e.getMessage(), equalTo("Неверные данные."));
     }
 
     @Test

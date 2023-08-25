@@ -170,10 +170,12 @@ public class ItemServiceImpl implements ItemService {
         }
         return itemsDto;
     }
+
     private User getUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("Неверный ID пользователя."));
     }
+
     private ItemRequest getItemRequest(Long requestId) {
         return itemRequestRepository.findById(requestId).orElseThrow(() ->
                 new NotFoundException("Неверный ID запроса."));

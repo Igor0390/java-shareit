@@ -13,7 +13,7 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.BookingException;
 import ru.practicum.shareit.exception.BookingValidationException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.exception.ValidationExceptionHandler;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -65,7 +65,7 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("Невозможно изменить бронирование.");
         }
         if (!booking.getStatus().equals(WAITING)) {
-            throw new ValidationException("Невозможно изменить статус бронирования.");
+            throw new ValidationExceptionHandler("Невозможно изменить статус бронирования.");
         }
         if (approved) {
             booking.setStatus(APPROVED);
@@ -171,7 +171,7 @@ public class BookingServiceImpl implements BookingService {
 
     private void validationData(LocalDateTime start, LocalDateTime end) {
         if (!start.isBefore(end)) {
-            throw new ValidationException("Неверные даты");
+            throw new ValidationExceptionHandler("Неверные даты");
         }
     }
 }

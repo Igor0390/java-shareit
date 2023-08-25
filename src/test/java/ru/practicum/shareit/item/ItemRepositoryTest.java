@@ -39,11 +39,6 @@ public class ItemRepositoryTest {
 
     @BeforeEach
     void init() {
-        itemRequest = ItemRequest.builder()
-                .description("описание")
-                .requestor(user1)
-                .created(LocalDateTime.now())
-                .build();
 
         user = User.builder()
                 .name("Oleg")
@@ -59,8 +54,7 @@ public class ItemRepositoryTest {
                 .name("Молоток")
                 .description("молоток забивной")
                 .available(true)
-                .owner(user1)
-                .request(itemRequest)
+                .owner(user)
                 .build();
 
         comment = Comment.builder()

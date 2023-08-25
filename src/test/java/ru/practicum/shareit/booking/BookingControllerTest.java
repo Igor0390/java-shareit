@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.exception.BadRequestExceptionHandler;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -144,7 +144,7 @@ public class BookingControllerTest {
     @Test
     void testSaveBookingWithStatus400() throws Exception {
         when(bookingService.saveBooking(any(), anyLong()))
-                .thenThrow(new BadRequestException("Validation error 400"));
+                .thenThrow(new BadRequestExceptionHandler("Validation error 400"));
 
         mvc.perform(post("/bookings")
                         .content(mapper.writeValueAsString(bookingRequestDto))
@@ -172,7 +172,7 @@ public class BookingControllerTest {
     @Test
     void testUpdateBookingWithStatus400() throws Exception {
         when(bookingService.updateBooking(anyLong(), anyLong(), anyBoolean()))
-                .thenThrow(new BadRequestException("Validation error 400"));
+                .thenThrow(new BadRequestExceptionHandler("Validation error 400"));
 
         mvc.perform(patch("/bookings/{id}?approved=true", 5)
                         .characterEncoding(UTF_8)
@@ -248,7 +248,7 @@ public class BookingControllerTest {
     @Test
     void testGetAllByBookerWithStatus400() throws Exception {
         when(bookingService.getAllByBooker(anyLong(), anyString(), anyInt(), anyInt()))
-                .thenThrow(new BadRequestException("Validation error 400"));
+                .thenThrow(new BadRequestExceptionHandler("Validation error 400"));
 
         mvc.perform(get("/bookings?state=WAITING&from=2&size=2")
                         .header("X-Sharer-User-Id", 1L))
@@ -295,7 +295,7 @@ public class BookingControllerTest {
     @Test
     void testGetAllByOwnerWithStatus400() throws Exception {
         when(bookingService.getAllByOwner(anyLong(), anyString(), anyInt(), anyInt()))
-                .thenThrow(new BadRequestException("Validation error 400"));
+                .thenThrow(new BadRequestExceptionHandler("Validation error 400"));
 
         mvc.perform(get("/bookings/owner?state=WAITING&from=2&size=2")
                         .header("X-Sharer-User-Id", 1L))

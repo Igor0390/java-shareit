@@ -57,6 +57,14 @@ public class ItemServiceImplTest {
             .text("новый комментарий")
             .build();
 
+    private final ItemDto itemDto2 = ItemDto
+            .builder()
+            .id(1L)
+            .name("Молоток")
+            .description("молоток забивной")
+            .available(true)
+            .build();
+
     @Test
     void testSaveItem() {
 
@@ -97,6 +105,19 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    void testSaveItemFailNegativeItemRequest() {
+
+        userService.saveUser(userDto);
+        itemService.saveItem(itemDto, 1L);
+        itemDto.setRequestId(-20L);
+
+        NotFoundException e = assertThrows(NotFoundException.class,
+                () -> itemService.saveItem(itemDto, 1L));
+        assertThat(e.getMessage(), equalTo("Неверный ID запроса."));
+    }
+
+
+    @Test
     void testUpdateItem() {
 
         userService.saveUser(userDto);
@@ -119,6 +140,15 @@ public class ItemServiceImplTest {
         NotFoundException e = assertThrows(NotFoundException.class,
                 () -> itemService.updateItem(1L, itemDto, 20L));
         assertThat(e.getMessage(), equalTo("Неверный ID пользователя."));
+    }
+
+    @Test
+    void testUpdateItemWithUserNameIsNull() {
+        userService.saveUser(userDto);
+        itemService.saveItem(itemDto2, 1L);
+
+        itemDto2.setId(1L);
+        assertThat(itemDto2.getName(), equalTo("Молоток"));
     }
 
     @Test

@@ -14,6 +14,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.BookingValidationException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ValidationExceptionHandler;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -21,7 +22,6 @@ import ru.practicum.shareit.user.service.UserService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -118,7 +118,7 @@ public class BookingServiceImplTest {
     void testSaveBookingValidationData() {
         bookingRequestDto.setStart(timestamp2);
         bookingRequestDto.setEnd(timestamp1);
-        ValidationException e = assertThrows(ValidationException.class,
+        ValidationExceptionHandler e = assertThrows(ValidationExceptionHandler.class,
                 () -> bookingService.saveBooking(bookingRequestDto, 2L));
 
         assertThat(e.getMessage(), equalTo("Неверные даты"));

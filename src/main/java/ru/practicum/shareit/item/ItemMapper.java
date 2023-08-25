@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class ItemMapper {
                 .owner(item.getOwner().getId())
                 .lastBooking(null)
                 .nextBooking(null)
+                .requestId(item.getRequest() != null ? item.getRequest().getId() : null)
                 .comments(new ArrayList<>())
                 .build();
     }
@@ -36,5 +38,15 @@ public class ItemMapper {
         return items.stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
+    }
+
+    public static ItemShortDto toItemShortDto(Item item) {
+        return ItemShortDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .requestId(item.getRequest().getId())
+                .build();
     }
 }

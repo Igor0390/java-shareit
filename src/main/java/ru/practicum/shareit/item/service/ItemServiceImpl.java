@@ -2,6 +2,9 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingMapper;
@@ -9,13 +12,15 @@ import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.UserNotFoundException;
+import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.model.Comment;
 import ru.practicum.shareit.item.comment.repository.CommentRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -36,14 +41,18 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
     public ItemDto saveItem(ItemDto itemDto, Long userId) {
-        log.info("Данные вещи сохранены.");
-        User userOwner = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Неверный ID пользователя."));
-
+        User savedUser = getUser(userId);
         Item item = toItem(itemDto);
-        item.setOwner(userOwner);
+        item.setOwner(savedUser);
+
+        if (itemDto.getRequestId() != null) {
+            ItemRequest itemRequest = getItemRequest(itemDto.getRequestId());
+            item.setRequest(itemRequest);
+        }
         log.info("Вещь добавлена.");
         return toItemDto(itemRepository.save(item));
     }
@@ -81,9 +90,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getItemByUserId(Long userId) {
+    public List<ItemDto> getItemByUserId(Long userId, int from, int size) {
+        Pageable page = PageRequest.of(from / size, size);
 
-        List<Item> items = itemRepository.findAllByOwnerId(userId).stream().sorted(Comparator.comparing(Item::getId)).collect(Collectors.toList());
+        List<Item> items = itemRepository.findAllByOwnerId(userId, page).stream().sorted(Comparator.comparing(Item::getId)).collect(Collectors.toList());
 
         List<ItemDto> itemsDto = this.setBookings(items);
         this.setComments(itemsDto);
@@ -92,17 +102,20 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getItemByText(String text) {
+    public List<ItemDto> getItemByText(String text, int from, int size) {
 
         if (text.isBlank()) {
             return List.of();
         }
         String query = text.toLowerCase();
-        List<Item> items = itemRepository.getItemByText(query);
+        Pageable page = PageRequest.of(from / size, size);
+        Page<Item> items = itemRepository.getItemByText(query, page);
         if (items.isEmpty()) {
             return List.of();
         }
-        return toItemsDto(items);
+        return items.stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 
 
@@ -156,5 +169,13 @@ public class ItemServiceImpl implements ItemService {
             });
         }
         return itemsDto;
+    }
+    private User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException("Неверный ID пользователя."));
+    }
+    private ItemRequest getItemRequest(Long requestId) {
+        return itemRequestRepository.findById(requestId).orElseThrow(() ->
+                new NotFoundException("Неверный ID запроса."));
     }
 }

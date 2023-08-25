@@ -52,6 +52,18 @@ public class ErrorHandler {
         log.error("Validation Exception {}",e.getMessage(), e);
         return new ErrorResponse(e.getMessage(), e.getMessage());
     }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBadRequest(final BadRequestException e) {
+        log.error("Bad request exception{}",e.getMessage(), e);
+        return new ErrorResponse("Validation error 400", e.getMessage());
+    }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidate(final javax.validation.ValidationException e) {
+        log.error("Validation Exception");
+        return new ErrorResponse("Validation error 400", e.getMessage());
+    }
 
 }
 

@@ -10,7 +10,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.exception.BookingException;
 import ru.practicum.shareit.exception.BookingValidationException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationExceptionHandler;
@@ -45,7 +44,7 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("Невозможно забронировать собственную вещь.");
         }
         if (!item.getAvailable()) {
-            throw new BookingException("Вещь уже забронирована!");
+            throw new ValidationExceptionHandler("Вещь уже забронирована!");
         }
 
         validationData(bookingDto.getStart(), bookingDto.getEnd());

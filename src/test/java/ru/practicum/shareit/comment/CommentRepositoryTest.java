@@ -3,7 +3,7 @@ package ru.practicum.shareit.comment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.json.JsonTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.practicum.shareit.item.comment.model.Comment;
@@ -19,8 +19,9 @@ import java.time.LocalDateTime;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-@JsonTest
+@DataJpaTest
 public class CommentRepositoryTest {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -29,6 +30,7 @@ public class CommentRepositoryTest {
 
     @Autowired
     private CommentRepository commentRepository;
+
     private User user;
     private User user1;
     private Item item;

@@ -64,6 +64,13 @@ public class ItemServiceImplTest {
             .description("молоток забивной")
             .available(true)
             .build();
+    private final ItemDto itemDtoForUpdate = ItemDto
+            .builder()
+            .id(1L)
+            .name(null)
+            .description(null)
+            .available(true)
+            .build();
 
     @Test
     void testSaveItem() {
@@ -143,12 +150,13 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    void testUpdateItemWithUserNameIsNull() {
+    void testUpdateItemWithNameIsNull() {
         userService.saveUser(userDto);
         itemService.saveItem(itemDto2, 1L);
+        itemService.updateItem(itemDto2.getId(), itemDtoForUpdate, userDto.getId());
 
-        itemDto2.setId(1L);
         assertThat(itemDto2.getName(), equalTo("Молоток"));
+        assertThat(itemDto2.getDescription(), equalTo("молоток забивной"));
     }
 
     @Test

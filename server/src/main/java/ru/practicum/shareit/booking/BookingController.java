@@ -18,26 +18,26 @@ import java.util.List;
 public class BookingController {
 
     private final BookingService bookingService;
-    private final CustomHeaders customHeaders;
+    final String customHeaders = "X-SHARER-USER-ID";
 
     @PostMapping
-    BookingDto saveBooking(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId, @RequestBody @Valid BookingRequestDto bookingDto) {
+    BookingDto saveBooking(@RequestHeader(customHeaders) Long userId, @RequestBody @Valid BookingRequestDto bookingDto) {
         return bookingService.saveBooking(bookingDto, userId);
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingDto updateBooking(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId, @PathVariable Long bookingId,
+    public BookingDto updateBooking(@RequestHeader(customHeaders) Long userId, @PathVariable Long bookingId,
                                     @RequestParam Boolean approved) {
         return bookingService.updateBooking(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
-    public BookingDto getById(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId, @PathVariable Long bookingId) {
+    public BookingDto getById(@RequestHeader(customHeaders) Long userId, @PathVariable Long bookingId) {
         return bookingService.getById(userId, bookingId);
     }
 
     @GetMapping
-    public List<BookingDto> getAllByBooker(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId,
+    public List<BookingDto> getAllByBooker(@RequestHeader(customHeaders) Long userId,
                                            @RequestParam(defaultValue = "ALL") String state,
                                            @RequestParam(defaultValue = "0") @Min(0) int from,
                                            @RequestParam(defaultValue = "20") @Min(1) int size) {
@@ -45,7 +45,7 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getAllByOwner(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId,
+    public List<BookingDto> getAllByOwner(@RequestHeader(customHeaders) Long userId,
                                           @RequestParam(defaultValue = "ALL") String state,
                                           @RequestParam(defaultValue = "0") @Min(0) int from,
                                           @RequestParam(defaultValue = "20") @Min(1) int size) {

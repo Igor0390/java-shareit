@@ -10,6 +10,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
+import static ru.practicum.shareit.request.controller.CustomHeaders.X_SHARER_USER_ID;
+
 @RestController
 @Validated
 @RequestMapping(path = "/requests")
@@ -17,28 +19,27 @@ import java.util.List;
 public class ItemRequestController {
 
     private final ItemRequestService itemRequestService;
-    private final CustomHeaders customHeaders;
 
     @PostMapping
-    ItemRequestDto saveItemRequest(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId,
+    ItemRequestDto saveItemRequest(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                    @Valid @RequestBody ItemRequestDto itemRequestDto) {
         return itemRequestService.saveItemRequest(itemRequestDto, userId);
     }
 
     @GetMapping
-    List<ItemRequestDto> getAllByUserId(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId) {
+    List<ItemRequestDto> getAllByUserId(@RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemRequestService.getAllByUserId(userId);
     }
 
     @GetMapping("/all")
-    List<ItemRequestDto> getAllRequests(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId,
+    List<ItemRequestDto> getAllRequests(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                         @RequestParam(defaultValue = "0") @Min(0) int from,
                                         @RequestParam(defaultValue = "20") @Min(1) int size) {
         return itemRequestService.getAllRequests(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
-    ItemRequestDto getRequestById(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId, @PathVariable Long requestId) {
+    ItemRequestDto getRequestById(@RequestHeader(X_SHARER_USER_ID) Long userId, @PathVariable Long requestId) {
         return itemRequestService.getRequestById(requestId, userId);
     }
 }

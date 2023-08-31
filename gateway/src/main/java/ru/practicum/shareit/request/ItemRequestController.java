@@ -20,30 +20,30 @@ import javax.validation.constraints.PositiveOrZero;
 public class ItemRequestController {
 
     private final ItemRequestClient itemRequestClient;
-    private final CustomHeaders customHeaders;
+    final String customHeaders = "X-SHARER-USER-ID";
 
     @PostMapping
-    ResponseEntity<Object> saveItemRequest(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId,
+    ResponseEntity<Object> saveItemRequest(@RequestHeader(customHeaders) Long userId,
                                            @Valid @RequestBody ItemRequestDto itemRequestDto) {
         log.info("Create item request by user {}", userId);
         return itemRequestClient.saveItemRequest(userId, itemRequestDto);
     }
 
     @GetMapping
-    ResponseEntity<Object> getAllByUserId(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId) {
+    ResponseEntity<Object> getAllByUserId(@RequestHeader(customHeaders) Long userId) {
         log.info("Get all user {} item requests", userId);
         return itemRequestClient.getAllByUserId(userId);
     }
 
     @GetMapping("/all")
-    ResponseEntity<Object> getAllRequests(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId,
+    ResponseEntity<Object> getAllRequests(@RequestHeader(customHeaders) Long userId,
                                           @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                           @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         return itemRequestClient.getAllRequests(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
-    ResponseEntity<Object> getRequestById(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId, @PathVariable Long requestId) {
+    ResponseEntity<Object> getRequestById(@RequestHeader(customHeaders) Long userId, @PathVariable Long requestId) {
         log.info("Get item request {}", requestId);
         return itemRequestClient.getRequestById(requestId, userId);
     }

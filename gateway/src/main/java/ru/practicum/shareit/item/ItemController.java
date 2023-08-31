@@ -21,29 +21,29 @@ import javax.validation.constraints.PositiveOrZero;
 public class ItemController {
 
     private final ItemClient itemClient;
-    private final CustomHeaders customHeaders;
+    final String customHeaders = "X-SHARER-USER-ID";
 
     @PostMapping
-    ResponseEntity<Object> saveItem(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId, @RequestBody @Valid ItemDto itemDto) {
+    ResponseEntity<Object> saveItem(@RequestHeader(customHeaders) Long userId, @RequestBody @Valid ItemDto itemDto) {
         log.info("Create item {}", itemDto);
         return itemClient.saveItem(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    ResponseEntity<Object> updateItem(@PathVariable Long itemId, @RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId,
+    ResponseEntity<Object> updateItem(@PathVariable Long itemId, @RequestHeader(customHeaders) Long userId,
                                       @RequestBody ItemDto itemDto) {
         log.info("Update item {}", itemId);
         return itemClient.updateItem(userId, itemId, itemDto);
     }
 
     @GetMapping("/{itemId}")
-    ResponseEntity<Object> getItemById(@PathVariable Long itemId, @RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId) {
+    ResponseEntity<Object> getItemById(@PathVariable Long itemId, @RequestHeader(customHeaders) Long userId) {
         log.info("Get item by userId={}", userId);
         return itemClient.getItemById(itemId, userId);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getItemByUserId(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId,
+    public ResponseEntity<Object> getItemByUserId(@RequestHeader(customHeaders) Long userId,
                                                   @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                   @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Get all items from user {}", userId);
@@ -59,7 +59,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public ResponseEntity<Object> saveComment(@RequestHeader(customHeaders.X_SHARER_USER_ID) Long userId, @PathVariable Long itemId,
+    public ResponseEntity<Object> saveComment(@RequestHeader(customHeaders) Long userId, @PathVariable Long itemId,
                                               @RequestBody @Valid CommentDto commentDto) {
         log.info("Create comment from user {}", userId);
         return itemClient.saveComment(userId, itemId, commentDto);

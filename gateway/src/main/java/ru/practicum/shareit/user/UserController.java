@@ -14,19 +14,18 @@ import ru.practicum.shareit.user.dto.UserDto;
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class UserController {
 
     private final UserClient userClient;
 
     @PostMapping
-    public ResponseEntity<Object> saveUser(@Validated({Create.class})@RequestBody UserDto userDto) {
+    public ResponseEntity<Object> saveUser(@Validated({Create.class}) @RequestBody UserDto userDto) {
         log.info("Creating user {}", userDto);
         return userClient.saveUser(userDto);
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@Validated({Update.class})@RequestBody UserDto userDto,
+    public ResponseEntity<Object> updateUser(@Validated({Update.class}) @RequestBody UserDto userDto,
                                              @PathVariable Long userId) {
         log.info("Update user {}", userId);
         return userClient.updateUser(userDto, userId);

@@ -40,13 +40,6 @@ public class ErrorHandler {
         return new ErrorResponse("Validation error 400", e.getMessage());
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidate(final javax.validation.ValidationException e) {
-        log.error("Validation Exception");
-        return new ErrorResponse("Validation error 400", e.getMessage());
-    }
-
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable(final Throwable e) {

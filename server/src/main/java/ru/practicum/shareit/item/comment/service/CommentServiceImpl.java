@@ -13,7 +13,6 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 
 import static ru.practicum.shareit.booking.model.Status.APPROVED;
@@ -37,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
 
         if (bookingRepository.findAllByBookerIdAndItemIdAndStatusEqualsAndEndIsBefore(userId, itemId, APPROVED,
                 LocalDateTime.now()).isEmpty()) {
-            throw new ValidationException("Невозможно добавить комментарий.");
+            throw new NotFoundException("Невозможно добавить комментарий.");
         }
 
         Comment comment = toComment(commentDto, user, item);
